@@ -44,7 +44,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Load tasks from LocalStorage
     const savedTasks = JSON.parse(localStorage.getItem('todos')) || [];
-    savedTasks.forEach(task => addTaskToList(task));
+    savedTasks.forEach(task => {
+        addTaskToList(task)
+
+    });
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -66,13 +69,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     function addTaskToList(task) {
+        
+        console.log(task.isDone)
         const todo = `
             <div class="task" id="${task.id}">
                 <p class="task-text ${task.isDone ? 'done' : ''}">${task.text}</p>
                 <div class="date-time-and-btns">
                     <h4><span>${task.time}</span> </h4>
                     <div class="buttons">
-                        <input type="checkbox">
+                        <input type="checkbox" class="checkbox"  ${task.isDone ? 'checked' : ''} >
                         <button class="edit-task"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg></button>
                         <button class="delete-task"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg></button>
                     </div>
@@ -104,18 +109,28 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (e.target.tagName === 'INPUT') {
             const taskID = e.target.parentElement.parentElement.parentElement.id
             const taskElement = document.getElementById(taskID).querySelector(".task-text");
+            
 
             if (e.target.checked) {
                 // mark as done
                 taskElement.classList.add('done');
-
+                updateTaskInLocalStorage(taskID, true)
+                
             } else {
                 // unmark as done
                 taskElement.classList.remove('done');
+                updateTaskInLocalStorage(taskID, false)
 
-            }
+            } 
         }
     })
+
+    const updateTaskInLocalStorage = (taskid, val) => {
+        const tasks = JSON.parse(localStorage.getItem('todos'));
+        const filteredTask = tasks.filter((task) => task.id == taskid)
+        filteredTask[0].isDone = val
+        localStorage.setItem('todos', JSON.stringify(tasks));
+    }
 
     const deleteTaskFromLocalStorage = (taskID) => {
         const tasks = JSON.parse(localStorage.getItem('todos')) || [];

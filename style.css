@@ -171,8 +171,9 @@ body {
 
 #viewpage #container #list .task .date-time-and-btns .buttons input[type="checkbox"] {
     cursor: pointer;
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
 }
 
 
